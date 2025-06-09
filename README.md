@@ -69,7 +69,7 @@ taskify/
    ```
 3. Start the frontend:
    ```
-   npm start
+   npm run dev
    ```
 4. Visit `http://localhost:3000` in your browser.
 

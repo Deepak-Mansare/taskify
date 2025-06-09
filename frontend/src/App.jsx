@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import Navbar from "./components/Navbar";
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
 import Unauthorized from "./components/Unauthorized";
 
 function App() {
@@ -18,8 +19,25 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            }
+          />
+
           <Route
             path="/admin"
             element={
@@ -28,6 +46,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/dashboard"
             element={
@@ -36,6 +55,7 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           <Route path="/unauthorized" element={<Unauthorized />} />
         </Routes>
       </BrowserRouter>
@@ -43,4 +63,5 @@ function App() {
     </>
   );
 }
+
 export default App;

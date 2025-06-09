@@ -13,7 +13,7 @@ router.post("/login", loginUser);
 // Admin-only routes
 router.get("/getUsers", authMiddleware, adminMiddleware, getAllUsers);
 router.get("/getAdmins", authMiddleware, adminMiddleware, getAllAdmins);
-router.put("/updateUser:id", authMiddleware, adminMiddleware, updateUser);
-router.delete("/deleteUser:id", authMiddleware, adminMiddleware, deleteUser);
+router.put("/updateUser/:id", authMiddleware, adminMiddleware, updateUser);
+router.delete("/deleteUser/:id", authMiddleware, adminMiddleware, deleteUser);
 
 module.exports = router;

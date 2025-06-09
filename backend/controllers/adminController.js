@@ -1,6 +1,6 @@
 const userModel = require("../models/userModel");
 
-// Get all users (admin only)
+// Get all users 
 const getAllUsers = async (req, res) => {
     try {
         const users = await userModel.find().select("-password");

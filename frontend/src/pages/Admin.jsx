@@ -101,7 +101,7 @@ function Admin() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     toast.success("Logged out successfully");
-    window.location.href = "/login"; // Change to your login route
+    window.location.href = "/login";
   };
 
   const filteredUsers = users.filter((user) => {
@@ -155,7 +155,7 @@ function Admin() {
         </div>
       </div>
 
-      {/* Filter + Logout */}
+      {/* Filter and Logout */}
       <div className="d-flex justify-content-end mb-4 align-items-center">
         <select
           className="form-select w-auto me-3"

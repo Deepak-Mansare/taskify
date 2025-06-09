@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { jwtDecode } from "jwt-decode"; // fixed import, no curly braces
+import { jwtDecode } from "jwt-decode";
 
 function Dashboard() {
   const [userName, setUserName] = useState("");
-  const [userRole, setUserRole] = useState(""); // added userRole state
+  const [userRole, setUserRole] = useState("");
   const [tasks, setTasks] = useState([]);
   const [filterStatus, setFilterStatus] = useState("All");
 
@@ -31,14 +31,14 @@ function Dashboard() {
     }
   };
 
-  // Decode token on mount to get user info
+  // Decode token
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
         const decoded = jwtDecode(token);
         setUserName(decoded.name || decoded.email || "User");
-        setUserRole(decoded.role || "user"); // set role here
+        setUserRole(decoded.role || "user");
       } catch {
         navigate("/login");
       }
@@ -76,7 +76,7 @@ function Dashboard() {
     }
   };
 
-  // Delete handler for admin
+  // Delete handler
   const handleDelete = async (taskId) => {
     if (!window.confirm("Are you sure you want to delete this task?")) return;
 

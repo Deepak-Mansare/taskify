@@ -26,7 +26,10 @@ function Login() {
         return;
       }
 
-      const result = await axios.post("/user/login", user);
+      const result = await axios.post("/user/login", user, {
+        withCredentials: true,
+      });
+
       if (result.status === 200 || result.status === 201) {
         toast.success(result.data.message);
         localStorage.setItem("token", result.data.token);

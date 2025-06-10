@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import axios from "../axiosConfig";
 import { toast } from "react-toastify";
 
 function AssignTaskModal({ user, onClose }) {
@@ -16,7 +16,7 @@ function AssignTaskModal({ user, onClose }) {
 
     try {
       await axios.post(
-        "http://localhost:3000/task/createTask",
+        "/task/createTask",
         {
           title,
           description,

@@ -11,7 +11,10 @@ dotenv.config()
 
 const app = express()
 
-app.use(cors())
+app.use(cors({
+    origin: "https://frontend-vorb.onrender.com",
+    credentials: true
+}));
 app.use(express.json())
 
 mongoose.connect(process.env.MONGO_URI)

@@ -1,5 +1,5 @@
-import axios from "../axiosConfig";
 import { useState, useEffect } from "react";
+import axios from "../axiosConfig";
 import { toast } from "react-toastify";
 import AssignTaskModal from "../components/AssignTaskModal";
 
@@ -13,33 +13,33 @@ function Admin() {
 
   const token = localStorage.getItem("token");
 
-  const fetchUsersAndTasks = () => {
-    axios
-      .get("/task/getTasks", {
+  // Fetch users, admins, and tasks from backend
+  const fetchUsersAndTasks = async () => {
+    try {
+      const tasksRes = await axios.get("/task/getTasks", {
         headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => setTasks(res.data.tasks))
-      .catch(() => toast.error("Failed to fetch tasks"));
+      });
+      setTasks(tasksRes.data.tasks);
 
-    axios
-      .get("/user/getUsers", {
+      const usersRes = await axios.get("/user/getUsers", {
         headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => setUsers(res.data.users))
-      .catch(() => toast.error("Failed to fetch users"));
+      });
+      setUsers(usersRes.data.users);
 
-    axios
-      .get("/user/getAdmins", {
+      const adminsRes = await axios.get("/user/getAdmins", {
         headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => setAdmins(res.data.admins))
-      .catch(() => toast.error("Failed to fetch admins"));
+      });
+      setAdmins(adminsRes.data.admins);
+    } catch (error) {
+      toast.error("Failed to fetch data");
+    }
   };
 
   useEffect(() => {
     fetchUsersAndTasks();
   }, []);
 
+  // Calculate task counts by status for a user
   const getTaskCounts = (userId) => {
     let userTasks = tasks.filter((task) => task.userId === userId);
 
@@ -62,11 +62,13 @@ function Admin() {
     return { total, completed, pending };
   };
 
+  // Show Assign Task modal for selected user
   const handleAssignClick = (user) => {
     setSelectedUser(user);
     setShowModal(true);
   };
 
+  // Delete user by ID
   const handleDeleteUser = async (userId) => {
     try {
       await axios.delete(`/user/deleteUser/${userId}`, {
@@ -79,6 +81,7 @@ function Admin() {
     }
   };
 
+  // Update user name by ID
   const handleUpdateUser = async (userId) => {
     const newName = prompt("Enter updated name:");
     if (!newName) return;
@@ -98,12 +101,14 @@ function Admin() {
     }
   };
 
+  // Logout user
   const handleLogout = () => {
     localStorage.removeItem("token");
     toast.success("Logged out successfully");
     window.location.href = "/login";
   };
 
+  // Filter users based on task status filter
   const filteredUsers = users.filter((user) => {
     const taskCounts = getTaskCounts(user._id);
     if (filterStatus === "Completed" && taskCounts.completed === 0)
@@ -114,13 +119,85 @@ function Admin() {
 
   return (
     <div className="container py-5">
-      {/* unchanged UI code */}
+      {/* Your UI for users, admins, filters, etc. */}
+
+      {/* Example: Filter status selection */}
+      <div className="mb-4">
+        <label htmlFor="filterStatus" className="form-label">
+          Filter Tasks by Status:
+        </label>
+        <select
+          id="filterStatus"
+          className="form-select"
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+        >
+          <option>All</option>
+          <option>Completed</option>
+          <option>Pending</option>
+        </select>
+      </div>
+
+      {/* User list (simplified example) */}
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Total Tasks</th>
+            <th>Completed</th>
+            <th>Pending</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredUsers.map((user) => {
+            const { total, completed, pending } = getTaskCounts(user._id);
+            return (
+              <tr key={user._id}>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{total}</td>
+                <td>{completed}</td>
+                <td>{pending}</td>
+                <td>
+                  <button
+                    className="btn btn-primary btn-sm me-2"
+                    onClick={() => handleAssignClick(user)}
+                  >
+                    Assign Task
+                  </button>
+                  <button
+                    className="btn btn-warning btn-sm me-2"
+                    onClick={() => handleUpdateUser(user._id)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDeleteUser(user._id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+
+      {/* Assign Task Modal */}
       {showModal && (
         <AssignTaskModal
           user={selectedUser}
           onClose={() => setShowModal(false)}
         />
       )}
+
+      {/* Logout Button */}
+      <button className="btn btn-secondary mt-4" onClick={handleLogout}>
+        Logout
+      </button>
     </div>
   );
 }

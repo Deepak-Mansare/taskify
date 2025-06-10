@@ -34,6 +34,7 @@ function Register() {
       }
 
       const result = await axios.post("/user/register", user);
+
       if (result.status === 200 || result.status === 201) {
         toast.success(result.data.message);
         setUser({ name: "", email: "", password: "", confPassword: "" });
@@ -41,7 +42,8 @@ function Register() {
       } else {
         toast.error("Registration failed");
       }
-    } catch {
+    } catch (error) {
+      console.error("Registration error:", error);
       toast.error("Something went wrong!");
     }
   };

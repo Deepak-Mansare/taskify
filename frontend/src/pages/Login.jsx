@@ -38,7 +38,8 @@ function Login() {
       } else {
         toast.error(result.data.message);
       }
-    } catch {
+    } catch (error) {
+      console.error("Login error:", error);
       toast.error("Something went wrong!");
     }
   };

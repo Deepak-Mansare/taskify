@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "../axiosConfig";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 function Dashboard() {
   const [userName, setUserName] = useState("");

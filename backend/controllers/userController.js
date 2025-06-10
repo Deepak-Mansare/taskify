@@ -58,14 +58,19 @@ const loginUser = async (req, res) => {
             { expiresIn: "24h" }
         );
 
-        res.status(200).json({
+        res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "None",
+            maxAge: 24 * 60 * 60 * 1000
+        }).status(200).json({
             success: true,
-            message: "Login successful",
-            token,
+            message: "Login successful"
         });
     } catch (error) {
         res.status(500).json({ success: false, message: "Internal server error", error: error.message });
     }
 };
+
 
 module.exports = { registerUser, loginUser };

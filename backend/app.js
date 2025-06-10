@@ -6,10 +6,12 @@ const userRouter = require("./routes/userRoutes")
 const taskRouter = require("./routes/taskRoutes")
 const authMiddleware = require('./middleware/authMiddleware')
 const adminMiddleware = require("./middleware/adminMiddleware")
+const cookieParser = require("cookie-parser");
 
 dotenv.config()
 
 const app = express()
+app.use(cookieParser());
 
 app.use(cors({
     origin: "https://frontend-vorb.onrender.com",

@@ -1,32 +1,26 @@
-const express = require('express')
-const cors = require('cors')
-const dotenv = require('dotenv')
-const mongoose = require('mongoose')
-const userRouter = require("./routes/userRoutes")
-const taskRouter = require("./routes/taskRoutes")
-const authMiddleware = require('./middleware/authMiddleware')
-const adminMiddleware = require("./middleware/adminMiddleware")
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
+const userRouter = require("./routes/userRoutes");
+const taskRouter = require("./routes/taskRoutes");
+const authMiddleware = require("./middleware/authMiddleware");
 
-dotenv.config()
+dotenv.config();
+const app = express();
 
-const app = express()
 app.use(cookieParser());
+app.use(cors());
+app.use(express.json());
 
-app.use(cors({
-    origin: "https://frontend-vorb.onrender.com",
-    credentials: true
-}));
-app.use(express.json())
-
-mongoose.connect(process.env.MONGO_URI)
+mongoose
+    .connect(process.env.MONGO_URI)
     .then(() => console.log("Database connected"))
-    .catch(err => console.log(" Connection failed:", err))
+    .catch((err) => console.log("Connection failed:", err));
 
-app.use("/user", userRouter)
-app.use("/task", authMiddleware, taskRouter)
+app.use("/user", userRouter);
+app.use("/task", authMiddleware, taskRouter);
 
-const PORT = process.env.PORT || 3000
-app.listen(PORT, () => {
-    console.log(`Backend is running on port ${PORT}`)
-})
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Backend is running on port ${PORT}`));

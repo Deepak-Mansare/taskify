@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "../axiosConfig";
+import axios from "axios";
 import { toast } from "react-toastify";
 
 function AssignTaskModal({ user, onClose }) {
@@ -9,24 +9,13 @@ function AssignTaskModal({ user, onClose }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!title || !description) {
-      toast.error("Please fill in all fields");
-      return;
-    }
+    if (!title || !description) return toast.error("All fields required");
 
     try {
       await axios.post(
-        "/task/createTask",
-        {
-          title,
-          description,
-          userId: user._id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        "http://localhost:3000/task/createTask",
+        { title, description, userId: user._id },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success("Task assigned successfully");
       onClose();

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "../axiosConfig";
+import axios from "axios";
 import { toast } from "react-toastify";
 
 function Register() {
@@ -22,6 +22,7 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Submitting register form", user);
     try {
       if (!user.name || !user.email || !user.password || !user.confPassword) {
         toast.warn("All fields are required");
@@ -33,7 +34,10 @@ function Register() {
         return;
       }
 
-      const result = await axios.post("/user/register", user);
+      const result = await axios.post(
+        "http://localhost:3000/user/register",
+        user
+      );
 
       if (result.status === 200 || result.status === 201) {
         toast.success(result.data.message);

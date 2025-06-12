@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "../axiosConfig";
+import axios from "axios";
 import { toast } from "react-toastify";
 
 function Login() {
@@ -26,9 +26,13 @@ function Login() {
         return;
       }
 
-      const result = await axios.post("/user/login", user, {
-        withCredentials: true,
-      });
+      const result = await axios.post(
+        "http://localhost:3000/user/login",
+        user,
+        {
+          withCredentials: true,
+        }
+      );
 
       if (result.status === 200 || result.status === 201) {
         toast.success(result.data.message);

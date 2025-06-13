@@ -22,13 +22,11 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting register form", user);
+    if (!user.name || !user.email || !user.password || !user.confPassword) {
+      toast.warn("All fields are required");
+      return;
+    }
     try {
-      if (!user.name || !user.email || !user.password || !user.confPassword) {
-        toast.warn("All fields are required");
-        return;
-      }
-
       if (user.password !== user.confPassword) {
         toast.error("Passwords do not match");
         return;
@@ -46,8 +44,7 @@ function Register() {
       } else {
         toast.error("Registration failed");
       }
-    } catch (error) {
-      console.error("Registration error:", error);
+    } catch {
       toast.error("Something went wrong!");
     }
   };

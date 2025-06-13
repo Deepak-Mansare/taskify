@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios"; // axiosConfig should have local baseURL set
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { jwtDecode } from "jwt-decode"; // fixed import from jwt-decode package
+import { jwtDecode } from "jwt-decode";
 
 function Dashboard() {
   const [userName, setUserName] = useState("");

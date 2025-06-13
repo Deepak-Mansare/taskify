@@ -13,7 +13,6 @@ function Admin() {
 
   const token = localStorage.getItem("token");
 
-  // Fetch users, admins, and tasks from backend
   const fetchUsersAndTasks = async () => {
     try {
       const tasksRes = await axios.get("http://localhost:3000/task/getTasks", {
@@ -42,7 +41,6 @@ function Admin() {
     fetchUsersAndTasks();
   }, []);
 
-  // Calculate task counts by status for a user
   const getTaskCounts = (userId) => {
     let userTasks = tasks.filter((task) => task.userId === userId);
 
@@ -65,34 +63,38 @@ function Admin() {
     return { total, completed, pending };
   };
 
-  // Show Assign Task modal for selected user
   const handleAssignClick = (user) => {
     setSelectedUser(user);
     setShowModal(true);
   };
 
-  // Delete user by ID
   const handleDeleteUser = async (userId) => {
-    try {
-      await axios.delete(`http://localhost:3000/user/deleteUser/${userId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      toast.success("User deleted");
-      fetchUsersAndTasks();
-    } catch {
-      toast.error("Delete failed");
+    const confirm = prompt(
+      "This user will be deleted, Are you sure? (Type... yes or no)"
+    );
+
+    if (confirm?.toLowerCase() === "yes") {
+      try {
+        await axios.delete(`http://localhost:3000/user/deleteUser/${userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        toast.success("User deleted");
+        fetchUsersAndTasks();
+      } catch {
+        toast.error("Delete failed");
+      }
     }
   };
 
-  // Update user name by ID
   const handleUpdateUser = async (userId) => {
     const newName = prompt("Enter updated name:");
+    const email = prompt("Enter updated email");
     if (!newName) return;
 
     try {
       await axios.put(
         `http://localhost:3000/user/updateUser/${userId}`,
-        { name: newName },
+        { name: newName, email: email },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -104,14 +106,12 @@ function Admin() {
     }
   };
 
-  // Logout user
   const handleLogout = () => {
     localStorage.removeItem("token");
     toast.success("Logged out successfully");
     window.location.href = "/login";
   };
 
-  // Filter users based on task status filter
   const filteredUsers = users.filter((user) => {
     const taskCounts = getTaskCounts(user._id);
     if (filterStatus === "Completed" && taskCounts.completed === 0)
@@ -121,13 +121,17 @@ function Admin() {
   });
 
   return (
-    <div className="container py-5">
-      {/* Your UI for users, admins, filters, etc. */}
+    <div className="container my-4">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h3 className="text-success">Admin Panel</h3>
+        <button className="btn btn-outline-success" onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
 
-      {/* Example: Filter status selection */}
-      <div className="mb-4">
+      <div className="mb-3">
         <label htmlFor="filterStatus" className="form-label">
-          Filter Tasks by Status:
+          Filter by Task Status
         </label>
         <select
           id="filterStatus"
@@ -141,66 +145,69 @@ function Admin() {
         </select>
       </div>
 
-      {/* User list (simplified example) */}
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Total Tasks</th>
-            <th>Completed</th>
-            <th>Pending</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredUsers.map((user) => {
-            const { total, completed, pending } = getTaskCounts(user._id);
-            return (
-              <tr key={user._id}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{total}</td>
-                <td>{completed}</td>
-                <td>{pending}</td>
-                <td>
-                  <button
-                    className="btn btn-primary btn-sm me-2"
-                    onClick={() => handleAssignClick(user)}
-                  >
-                    Assign Task
-                  </button>
-                  <button
-                    className="btn btn-warning btn-sm me-2"
-                    onClick={() => handleUpdateUser(user._id)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => handleDeleteUser(user._id)}
-                  >
-                    Delete
-                  </button>
+      <div className="table-responsive">
+        <table className="table table-bordered table-striped">
+          <thead className="table-success">
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Total</th>
+              <th>Completed</th>
+              <th>Pending</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredUsers.length === 0 ? (
+              <tr>
+                <td colSpan="6" className="text-center text-muted">
+                  No users found.
                 </td>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ) : (
+              filteredUsers.map((user) => {
+                const { total, completed, pending } = getTaskCounts(user._id);
+                return (
+                  <tr key={user._id}>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>{total}</td>
+                    <td>{completed}</td>
+                    <td>{pending}</td>
+                    <td>
+                      <button
+                        className="btn btn-sm btn-success me-2"
+                        onClick={() => handleAssignClick(user)}
+                      >
+                        Assign task
+                      </button>
+                      <button
+                        className="btn btn-sm btn-outline-success me-2"
+                        onClick={() => handleUpdateUser(user._id)}
+                      >
+                        Edit user info
+                      </button>
+                      <button
+                        className="btn btn-sm btn-outline-danger"
+                        onClick={() => handleDeleteUser(user._id)}
+                      >
+                        Delete user
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
 
-      {/* Assign Task Modal */}
       {showModal && (
         <AssignTaskModal
           user={selectedUser}
           onClose={() => setShowModal(false)}
         />
       )}
-
-      {/* Logout Button */}
-      <button className="btn btn-secondary mt-4" onClick={handleLogout}>
-        Logout
-      </button>
     </div>
   );
 }

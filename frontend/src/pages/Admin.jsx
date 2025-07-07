@@ -42,7 +42,10 @@ function Admin() {
   }, []);
 
   const getTaskCounts = (userId) => {
-    let userTasks = tasks.filter((task) => task.userId === userId);
+    let userTasks = tasks.filter((task) => {
+      const id = task.userId?._id || task.userId;
+      return id === userId;
+    });
 
     if (filterStatus === "Completed") {
       userTasks = userTasks.filter(
@@ -72,7 +75,6 @@ function Admin() {
     const confirm = prompt(
       "This user will be deleted, Are you sure? (Type... yes or no)"
     );
-
     if (confirm?.toLowerCase() === "yes") {
       try {
         await axios.delete(`http://localhost:3000/user/deleteUser/${userId}`, {

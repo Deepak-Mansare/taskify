@@ -12,10 +12,8 @@ function Dashboard() {
 
   const navigate = useNavigate();
 
-  // Fetch tasks from backend
   const fetchTasks = async () => {
     try {
-      // Add Authorization header with token for protected routes
       const token = localStorage.getItem("token");
       const res = await axios.get("http://localhost:3000/task/getTasks", {
         headers: { Authorization: `Bearer ${token}` },
@@ -32,7 +30,6 @@ function Dashboard() {
     }
   };
 
-  // Decode token and set user info
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {

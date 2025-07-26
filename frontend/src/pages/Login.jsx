@@ -4,34 +4,26 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 function Login() {
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-  });
-
+  const [user, setUser] = useState({ email: "", password: "" });
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setUser({
-      ...user,
-      [e.target.name]: e.target.value,
-    });
+    setUser({ ...user, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      if (!user.email || !user.password) {
-        toast.warn("Both email and password are required");
-        return;
-      }
+    if (!user.email || !user.password) {
+      toast.warn("Both email and password are required");
+      return;
+    }
 
+    try {
       const result = await axios.post(
         `${import.meta.env.VITE_API_URL}/user/login`,
         user,
         { withCredentials: true }
       );
-
       if (result.status === 200 || result.status === 201) {
         toast.success(result.data.message);
         localStorage.setItem("token", result.data.token);
@@ -51,13 +43,16 @@ function Login() {
         className="alert alert-warning text-center w-100 mb-4"
         style={{ maxWidth: "500px" }}
       >
-        <strong>Want to access Admin Features?</strong>
+        <strong>Want to explore both Admin and User features?</strong>
         <br />
-        Use this admin login:
+        First login using <strong>Admin</strong> to assign tasks.
         <br />
-        <strong>Email:</strong> admin@gmail.com
+        Then login as a <strong>normal user</strong> to update task status.
         <br />
-        <strong>Password:</strong> 123456
+        <br />
+        <strong>Admin Email:</strong> deepak@gmail.com
+        <br />
+        <strong>Password:</strong> 1234
       </div>
 
       <div className="card shadow-sm w-100" style={{ maxWidth: "450px" }}>

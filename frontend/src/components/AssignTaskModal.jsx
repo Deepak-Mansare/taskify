@@ -13,7 +13,7 @@ function AssignTaskModal({ user, onClose }) {
 
     try {
       await axios.post(
-        "http://localhost:3000/task/createTask",
+        `${import.meta.env.VITE_API_URL}/task/createTask`,
         { title, description, userId: user._id },
         { headers: { Authorization: `Bearer ${token}` } }
       );

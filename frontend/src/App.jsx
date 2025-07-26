@@ -1,16 +1,18 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
-import { ToastContainer } from "react-toastify";
+import Unauthorized from "./components/Unauthorized";
+
 import Navbar from "./components/Navbar";
-import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
-import Unauthorized from "./components/Unauthorized";
 
 function App() {
   return (
@@ -59,7 +61,8 @@ function App() {
           <Route path="/unauthorized" element={<Unauthorized />} />
         </Routes>
       </BrowserRouter>
-      <ToastContainer position="top-right" />
+
+      <ToastContainer position="top-right" autoClose={2000} />
     </>
   );
 }

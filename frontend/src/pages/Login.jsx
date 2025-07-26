@@ -39,22 +39,6 @@ function Login() {
 
   return (
     <div className="container d-flex flex-column justify-content-center align-items-center min-vh-100 bg-light p-3">
-      <div
-        className="alert alert-warning text-center w-100 mb-4"
-        style={{ maxWidth: "500px" }}
-      >
-        <strong>Want to explore both Admin and User features?</strong>
-        <br />
-        First login using <strong>Admin</strong> to assign tasks.
-        <br />
-        Then login as a <strong>normal user</strong> to update task status.
-        <br />
-        <br />
-        <strong>Admin Email:</strong> deepak@gmail.com
-        <br />
-        <strong>Password:</strong> 1234
-      </div>
-
       <div className="card shadow-sm w-100" style={{ maxWidth: "450px" }}>
         <div className="card-header text-white text-center bg-success w-100">
           <h1 className="my-2">Login User</h1>

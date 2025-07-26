@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 import { toast } from "react-toastify";
 import AssignTaskModal from "../components/AssignTaskModal";
 
@@ -15,22 +15,19 @@ function Admin() {
 
   const fetchUsersAndTasks = async () => {
     try {
-      const tasksRes = await axios.get("http://localhost:3000/task/getTasks", {
+      const tasksRes = await axiosInstance.get("/task/getTasks", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTasks(tasksRes.data.tasks);
 
-      const usersRes = await axios.get("http://localhost:3000/user/getUsers", {
+      const usersRes = await axiosInstance.get("/user/getUsers", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setUsers(usersRes.data.users);
 
-      const adminsRes = await axios.get(
-        "http://localhost:3000/user/getAdmins",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const adminsRes = await axiosInstance.get("/user/getAdmins", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setAdmins(adminsRes.data.admins);
     } catch {
       toast.error("Failed to fetch data");
@@ -77,7 +74,7 @@ function Admin() {
     );
     if (confirm?.toLowerCase() === "yes") {
       try {
-        await axios.delete(`http://localhost:3000/user/deleteUser/${userId}`, {
+        await axiosInstance.delete(`/user/deleteUser/${userId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         toast.success("User deleted");
@@ -94,8 +91,8 @@ function Admin() {
     if (!newName) return;
 
     try {
-      await axios.put(
-        `http://localhost:3000/user/updateUser/${userId}`,
+      await axiosInstance.put(
+        `/user/updateUser/${userId}`,
         { name: newName, email: email },
         {
           headers: { Authorization: `Bearer ${token}` },

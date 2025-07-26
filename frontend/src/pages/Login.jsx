@@ -27,11 +27,9 @@ function Login() {
       }
 
       const result = await axios.post(
-        "http://localhost:3000/user/login",
+        `${import.meta.env.VITE_API_URL}/user/login`,
         user,
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
 
       if (result.status === 200 || result.status === 201) {
@@ -42,14 +40,26 @@ function Login() {
       } else {
         toast.error(result.data.message);
       }
-    } catch (error) {
-      console.error("Login error:", error);
+    } catch {
       toast.error("Something went wrong!");
     }
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center min-vh-100 bg-light p-3">
+    <div className="container d-flex flex-column justify-content-center align-items-center min-vh-100 bg-light p-3">
+      <div
+        className="alert alert-warning text-center w-100 mb-4"
+        style={{ maxWidth: "500px" }}
+      >
+        <strong>Want to access Admin Features?</strong>
+        <br />
+        Use this admin login:
+        <br />
+        <strong>Email:</strong> admin@gmail.com
+        <br />
+        <strong>Password:</strong> 123456
+      </div>
+
       <div className="card shadow-sm w-100" style={{ maxWidth: "450px" }}>
         <div className="card-header text-white text-center bg-success w-100">
           <h1 className="my-2">Login User</h1>

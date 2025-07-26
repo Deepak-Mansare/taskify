@@ -22,23 +22,26 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!user.name || !user.email || !user.password || !user.confPassword) {
+    const { name, email, password, confPassword } = user;
+
+    if (!name || !email || !password || !confPassword) {
       toast.warn("All fields are required");
       return;
     }
-    try {
-      if (user.password !== user.confPassword) {
-        toast.error("Passwords do not match");
-        return;
-      }
 
-      const result = await axios.post(
-        "http://localhost:3000/user/register",
+    if (password !== confPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/user/register`,
         user
       );
 
-      if (result.status === 200 || result.status === 201) {
-        toast.success(result.data.message);
+      if (res.status === 200 || res.status === 201) {
+        toast.success(res.data.message);
         setUser({ name: "", email: "", password: "", confPassword: "" });
         navigate("/login");
       } else {

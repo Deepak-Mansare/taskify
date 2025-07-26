@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { jwtDecode } from "jwt-decode";
@@ -14,10 +14,7 @@ function Dashboard() {
 
   const fetchTasks = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:3000/task/getTasks", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axiosInstance.get("/task/getTasks");
       setTasks(res.data.tasks);
     } catch (err) {
       if (err.response && err.response.status === 401) {
@@ -61,12 +58,9 @@ function Dashboard() {
     if (!newStatus) return;
 
     try {
-      const token = localStorage.getItem("token");
-      await axios.put(
-        `http://localhost:3000/task/updateTask/${taskId}`,
-        { status: newStatus },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await axiosInstance.put(`/task/updateTask/${taskId}`, {
+        status: newStatus,
+      });
       toast.success("Task status updated");
       fetchTasks();
     } catch (error) {
@@ -79,10 +73,7 @@ function Dashboard() {
     if (!window.confirm("Are you sure you want to delete this task?")) return;
 
     try {
-      const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:3000/task/deleteTask/${taskId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axiosInstance.delete(`/task/deleteTask/${taskId}`);
       toast.success("Task deleted successfully");
       fetchTasks();
     } catch (error) {

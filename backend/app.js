@@ -10,10 +10,12 @@ const authMiddleware = require("./middleware/authMiddleware");
 dotenv.config();
 const app = express();
 
+const PORT = process.env.PORT || 3000;
+
 app.use(cookieParser());
 app.use(
     cors({
-        origin: "http://localhost:5173",
+        origin: process.env.FRONTEND_ORIGIN,
         credentials: true,
     })
 );
@@ -27,5 +29,4 @@ mongoose
 app.use("/user", userRouter);
 app.use("/task", authMiddleware, taskRouter);
 
-const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Backend is running on port ${PORT}`));

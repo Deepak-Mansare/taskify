@@ -43,7 +43,23 @@ function Login() {
         <div className="card-header text-white text-center bg-success w-100">
           <h1 className="my-2">Login User</h1>
         </div>
+
         <div className="card-body">
+          <div className="alert alert-info mb-4">
+            <strong>Test Account Available:</strong>
+            <div>
+              Email: <code>vishalYadav30@gmail.com</code>
+            </div>
+            <div>
+              Password: <code>1234</code>
+            </div>
+            <div className="mt-2">
+              You can use this account to explore the app's features as an
+              employee. Admin access is restricted, but admin screenshots are
+              provided separately.
+            </div>
+          </div>
+
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="email" className="form-label">
@@ -80,6 +96,7 @@ function Login() {
             </div>
           </form>
         </div>
+
         <div className="card-footer text-center">
           <div className="m-2">
             <small>
